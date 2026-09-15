@@ -27,6 +27,7 @@ pip install -e ".[rede,xlsx]"
 
 ```bash
 coletor check configs/livros.yaml                    # valida a configuração
+coletor run configs/terabyte-placas-de-video.yaml     # loja real, uma página
 coletor run configs/livros.yaml --max-paginas 2      # coleta e grava livros.csv
 coletor run configs/livros.yaml --saida dados.xlsx   # grava planilha do Excel
 ```
@@ -119,12 +120,28 @@ desenvolvimento.
 
 O que foi considerado e descartado, com o motivo:
 
-**Raspar uma loja real de terceiros.** É o que quase todo scraper de portfólio
-faz, e cria dois problemas: costuma violar os termos de uso do site, e o projeto
-quebra na primeira mudança de layout — deixando no perfil um repositório que não
-roda mais. O alvo aqui é o `books.toscrape.com`, publicado pela Zyte justamente
-para treino de raspagem. O código não tem nada de específico dele: é só o
-`configs/livros.yaml` que aponta para lá.
+**Raspar qualquer loja que "desse certo".** A escolha de alvo passou por um
+critério, medido e não suposto: o `robots.txt` precisa permitir aquele caminho, e
+o HTML da primeira resposta precisa já conter o produto. Das cinco lojas
+testadas, **Pichau devolve 403** e **Amazon devolve 503** para qualquer cliente
+que não seja navegador, e **Shopee e Shein são SPA** — o HTML chega vazio e os
+produtos vêm de uma API interna não publicada. Só a **Terabyte** passou nos dois
+critérios, e é a única loja real em `configs/`. As outras não ficaram de fora por
+serem difíceis: ficaram porque chegar nelas exigiria forjar navegador, e um
+repositório que depende disso quebra sozinho no mês seguinte.
+
+Contornar esses bloqueios é possível e não está aqui. Rotação de proxy e
+resolução de captcha resolveriam o 403 da Pichau, ao custo de violar o termo de
+uso dela, de queimar o IP de quem rodasse, e de virar manutenção permanente
+contra um adversário que muda quando quer.
+
+**Adivinhar o endereço interno da paginação.** Na Terabyte, o botão "ver mais"
+aponta para a própria página e guarda o destino num atributo `data-pg`: a
+paginação é feita por JavaScript. Dava para abrir o DevTools, descobrir qual
+endereço o site chama por baixo e apontar para ele. Seria um endpoint não
+documentado, que a loja pode mudar sem aviso e não prometeu a ninguém — a mesma
+categoria de coisa que o projeto recusa nas outras lojas. A configuração declara
+`max_paginas: 1` e diz por quê.
 
 **Selenium.** O alvo entrega o HTML já pronto na primeira resposta, então subir um
 navegador seria dezenas de vezes mais lento e mais pesado para obter exatamente o
@@ -167,7 +184,7 @@ src/coletor/
   coleta.py     orquestração: robots, intervalo, busca, paginação
   cli.py        argparse: check, run
 tests/          155 testes, sem rede
-configs/        configurações versionadas, validadas no CI
+configs/        livros.yaml (site de treino) e terabyte (loja real), validadas no CI
 ```
 
 ## Desenvolvimento

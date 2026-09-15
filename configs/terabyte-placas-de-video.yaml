@@ -1,0 +1,52 @@
+# Categoria de placas de video da TerabyteShop.
+#
+# Por que esta loja: o robots.txt dela permite as paginas de categoria e de
+# produto (proibe /busca, que por isso nao e usada aqui), e o HTML da primeira
+# resposta ja traz nome e preco, sem depender de JavaScript. Foi a unica das
+# lojas testadas que passou nos dois criterios - Pichau devolve 403 e Amazon
+# devolve 503 para qualquer cliente que nao seja navegador. Ver "Decisoes
+# rejeitadas" no README.
+nome: terabyte-placas-de-video
+url_inicial: https://www.terabyteshop.com.br/hardware/placas-de-video
+user_agent: coletor/0.1 (+https://github.com/robertfxbr/webscraper)
+
+intervalo: 2.0
+
+# Uma pagina so, e de proposito. O botao "VER MAIS PRODUTOS" tem href apontando
+# para a propria pagina e guarda o destino real em data-pg="2": a paginacao e
+# feita por JavaScript. Seguir isso exigiria adivinhar o endereco interno que a
+# loja usa, e adivinhar endpoint nao publicado e o oposto do que este projeto
+# se propoe. Enquanto a loja nao expuser a proxima pagina num link de verdade,
+# sao 25 itens por execucao.
+max_paginas: 1
+
+item: div.product-item
+chave: [url]
+
+campos:
+  # O atributo title traz o nome inteiro; o <h2> vem truncado na listagem.
+  - nome: titulo
+    seletor: a.product-item__name
+    atributo: title
+    tipo: texto
+    obrigatorio: true
+
+  - nome: preco_a_vista
+    seletor: div.product-item__new-price span
+    tipo: dinheiro
+    obrigatorio: true
+
+  # So aparece quando o produto esta em promocao.
+  - nome: preco_anterior
+    seletor: div.product-item__old-price span
+    tipo: dinheiro
+
+  - nome: parcela
+    seletor: div.product-item__juros span:last-of-type
+    tipo: dinheiro
+
+  - nome: url
+    seletor: a.product-item__name
+    atributo: href
+    tipo: url
+    obrigatorio: true
