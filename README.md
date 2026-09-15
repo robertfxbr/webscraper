@@ -12,13 +12,13 @@ para de casar** em vez de continuar gravando linhas vazias.
 São 155 testes, 100% de cobertura, e a suíte inteira roda sem rede — contra
 páginas guardadas em `tests/fixtures`.
 
-[![CI](https://github.com/robertfxbr/webscrapper/actions/workflows/ci.yml/badge.svg)](https://github.com/robertfxbr/webscrapper/actions/workflows/ci.yml)
+[![CI](https://github.com/robertfxbr/webscraper/actions/workflows/ci.yml/badge.svg)](https://github.com/robertfxbr/webscraper/actions/workflows/ci.yml)
 
 ## Instalação
 
 ```bash
-git clone git@github.com:robertfxbr/webscrapper.git
-cd webscrapper
+git clone git@github.com:robertfxbr/webscraper.git
+cd webscraper
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e ".[rede,xlsx]"
 ```
@@ -57,7 +57,7 @@ diferentes.
 ```yaml
 nome: livros
 url_inicial: https://books.toscrape.com/catalogue/page-1.html
-user_agent: coletor/0.1 (+https://github.com/robertfxbr/webscrapper)
+user_agent: coletor/0.1 (+https://github.com/robertfxbr/webscraper)
 
 intervalo: 1.0            # segundos entre requisições
 max_paginas: 3
