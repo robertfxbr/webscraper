@@ -1,0 +1,36 @@
+# Catalogo do books.toscrape.com, um site publicado pela Zyte justamente para
+# treino de raspagem. Alvo escolhido de proposito: raspar loja real de
+# terceiros num projeto de portfolio cria problema de termo de uso e quebra a
+# cada mudanca de layout. Ver "Decisoes rejeitadas" no README.
+nome: livros
+url_inicial: https://books.toscrape.com/catalogue/page-1.html
+user_agent: coletor/0.1 (+https://github.com/robertfxbr/webscraper)
+
+intervalo: 1.0        # segundos entre requisicoes; o Crawl-delay do site vence este valor
+max_paginas: 3
+item: article.product_pod
+proxima_pagina: li.next a
+chave: [titulo]
+
+campos:
+  - nome: titulo
+    seletor: h3 a
+    atributo: title
+    tipo: texto
+    obrigatorio: true
+
+  - nome: preco
+    seletor: p.price_color
+    tipo: dinheiro
+
+  # A pagina de catalogo escreve apenas "In stock", sem quantidade; o numero so
+  # existe na pagina do livro. Por isso texto, e nao inteiro: declarar inteiro
+  # aqui produziria uma coluna inteira vazia, sem nenhum erro aparente.
+  - nome: disponibilidade
+    seletor: p.instock.availability
+    tipo: texto
+
+  - nome: url
+    seletor: h3 a
+    atributo: href
+    tipo: url

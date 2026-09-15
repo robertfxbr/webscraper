@@ -1,0 +1,25 @@
+nome: catalogo
+url_inicial: https://exemplo.test/catalogo/pagina1.html
+user_agent: coletor-teste/0.1
+intervalo: 0
+max_paginas: 2
+item: article.product_pod
+proxima_pagina: li.next a
+chave: [titulo]
+
+campos:
+  - nome: titulo
+    seletor: h3 a
+    atributo: title
+    tipo: texto
+    obrigatorio: true
+  - nome: preco
+    seletor: p.price_color
+    tipo: dinheiro
+  - nome: estoque
+    seletor: p.instock.availability
+    tipo: inteiro
+  - nome: url
+    seletor: h3 a
+    atributo: href
+    tipo: url
